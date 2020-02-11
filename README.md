@@ -8,3 +8,5 @@ We hebben enkel de vier eerste lagen nodig voor een netwerk op te bouwen, de res
 - Transport laag: Dit is voornamelijk de firewall bij een netwerk, kijk of alle nodige services toegevoegd zijn en acces hebben op de juiste poort.
 - Applicatie laag: Dit zijn alle applicaties, onder andere DNS.
 
+## DNS
+[DNS](Configuratie/DNS.md)
