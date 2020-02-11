@@ -29,7 +29,7 @@ Onthoud dat het ook handig is om met `vim /var/log/messages` of met `tail -F /va
 
 
 
-####named.conf
+#### named.conf
 
 We maken gebruik van twee bestanden om de named-deamon te configureren: `/etc/named.conf` en `/var/named/chroot/etc/named.conf`. We kijken in `/etc/named.conf`, een voorbeeld hiervan is:
 
@@ -121,7 +121,7 @@ Kort uitgelegd, wat je dus in deze file terugvind:
 
   
 
-####named.ca
+#### named.ca
 
 Een voorbeeld van `named.ca` om dus een verwijzing te doen naar 1 of meerdere rootservers:
 
@@ -139,9 +139,9 @@ De laatste lijn is voor CNAME of Canonical Name, dit is een gevorderde vorm van 
 
 
 
-####cynalco.com
+#### cynalco.com
 
-Nu, om een voorbeeld te tonen van een zone configuratiebestand, dit is `/var/named/cynalco.com`, merk op dit is in dezelfde directiory als dat je opgegeven hebt in de options:
+Nu, om een voorbeeld te tonen van een zone configuratiebestand, dit is `/var/named/cynalco.com`, merk op dit is in dezelfde directiory als dat je opgegeven hebt in de options, lees zeker het commentaar:
 
 ```bash
 $ORIGIN cynalco.com. # Dit is een specificatie van het huidig domein
