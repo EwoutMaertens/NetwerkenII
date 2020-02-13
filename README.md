@@ -10,3 +10,6 @@ We hebben enkel de vier eerste lagen nodig voor een netwerk op te bouwen, de res
 
 ## DNS
 [DNS](Configuratie/DNS.md)
+
+## Labo's
+[Labo DBS](Labo/DNS.md)
