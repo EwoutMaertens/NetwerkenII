@@ -37,7 +37,7 @@ options {
 };
 ``````
 
-Het volgende is de logging entry, dit wordt enkel gebruikt wat we willen doen met de log en messages, voor als er iets misloopt met de named service. Hier gebruiken we de default syslog van de named daemon. Hierachter komt direct de controls, die worden gebruikt om enkele verschillende controle opties aan te passen. Ik denk dat we hier aanduiden welke subnet adressen mogen gebruik maken van de DNS service van Xenakis.
+Het volgende is de logging entry, dit wordt enkel gebruikt wat we willen doen met de log en messages, voor als er iets misloopt met de named service. Hier gebruiken we de default syslog van de named daemon. Hierachter komt direct de controls, die worden gebruikt om enkele verschillende controle opties aan te passen. Ik denk dat we hier aanduiden welke subnet adressen mogen gebruik maken van de DNS service van Xenakis. *Ik denk dat bepaalde ip-adressen mogelijks toegang kunnen krijgen tot de configuratie van xenakis, niet zozeer de DNS service zelf.*
 
 ``````bash
 logging
@@ -64,6 +64,14 @@ zone "." IN {
 
 Zoals in het begin werd aangegeven, is Xenakis verantwoordelijk voor drie zone's: Griekenland, Hongarije en United Kingdom. Voor iedere zone gaan we een entry in `named.conf` moeten voorzien. Voor iedere zone is Xenakis telkens de master server en maken we een zone specifieke configuratie bestand aan met dezelfde naam als de zone. Geen idee waarom we bij de hu zone `notify yes;` gebruiken.
 
+*DNS NOTIFY is a mechanism that allows master servers to notify their slave servers of changes to a zone’s data.*
+
+*As a slave zone can also be a master to other slaves, named, by default, sends NOTIFY messages for every zone it loads. Specifying notify master-only; will cause named to only send NOTIFY for master zones that it loads.*
+
+*If yes (the default), DNS NOTIFY messages are sent when a zone the server is authoritative for changes, see Section 4.1. The messages are sent to the servers listed in the zone’s NS records (except the master server identified in the SOA MNAME field), and to any servers listed in the also-notify option.*
+
+*If master-only, notifies are only sent for master zones.*
+
 ``````bash
 zone "gr" IN { 
 	type master;
@@ -86,6 +94,7 @@ zone "uk" IN {
 ``````
 
 Op het einde horen nog enkele includes, maar opnieuw geen idee waarvoor dit precies dient.
+*To prevent unauthorized access to the service, named must be configured to listen on the selected port (that is, 953 by default), and an identical key must be used by both the service and the rndc utility.*
 
 ``````bash
 include "/etc/rndc.key";
@@ -107,7 +116,11 @@ In ieder zone specifiek configuratie bestand hebben we een SOA-entry bovenaan, o
 
 Bovenaan staat de algemene Time To Live, waar alle servers onderaan dan gebruik van maken, zo moeten we het maar 1 keer neerzetten.
 
-De eerste kolom is de naam van de zone, tweede kolom is Internet, 3e kolom is het type record, 4e kolom is de master server van de eerste kolom. Bij een A-record is dat dus gewoon het IP-adres, omdat we willen gebruik maken van relatieve naamgeving. De rest van de SOA lijn bevat een heleboel timestamps, er is aangegeven ernaast voor wat het dient. Aan alle zone namen wordt .gr toegevoegd!
+De eerste kolom is de naam van de zone, tweede kolom is Internet, 3e kolom is het type record, 4e kolom is de master server van de eerste kolom. Bij een A-record is dat dus gewoon het IP-adres, omdat we willen gebruik maken van relatieve naamgeving. De rest van de SOA lijn bevat een heleboel timestamps, er is aangegeven ernaast voor wat het dient. Aan alle zone namen wordt .gr. toegevoegd!
+
+Wanneer er niets geschreven staan in de eerste kolom (zie 2e rij), spreekt men over de huidige zone. het '@' symbool gaat uit van de zone waarin men zit (bestand), dit wordt steeds achter relatieve naamgevingen geplaatst (=> .gr.).
+
+Bij de tijdsaanduidingen bij het SOA-record, kan men gebruik maken van de afkortingen H, M, W, D (Hours, Months, Weeks, Days). Deze kunnen echter niet gebruikt worden in Windows, dus beter deze niet te gebruiken (in geval van copy paste om fouten te vermijden). 
 
 ``````bash
 $TTL 60
@@ -178,3 +191,5 @@ dig 	axfr 	hu 			@192.168.16.127
 ``````
 
 De output hiervan zou ongeveer gelijk moeten zijn als de inhoud van ieder zone configuratie bestand.
+
+PS: Er treedt redundante informatie op wanneer we kindzones opstellen in de zones. Dit door zogenaamde "glue records". Er zijn 2 soorten naamgeving mogelijk: relatieve of absolute naamgeving. Bij relatieve naamgeving dient enerzijds het A-record van de nameserver van de kindzone opgeschreven te worden en anderzijds de NS van die kindzone. Bij absolute naamgeving hoeft er slechts 1 lijn opgegeven te worden (NS van de kindzone). 
