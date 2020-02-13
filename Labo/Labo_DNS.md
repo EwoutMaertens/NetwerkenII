@@ -95,6 +95,7 @@ zone "uk" IN {
 
 Op het einde horen nog enkele includes, maar opnieuw geen idee waarvoor dit precies dient.
 *To prevent unauthorized access to the service, named must be configured to listen on the selected port (that is, 953 by default), and an identical key must be used by both the service and the rndc utility.*
+[Meer info.](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/deployment_guide/s2-bind-rndc "Meer info.")
 
 ``````bash
 include "/etc/rndc.key";
